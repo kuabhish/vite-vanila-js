@@ -1,41 +1,25 @@
 // components/about.js
+import { BasePage } from "./core/base-page.js";
 import { CoolText } from "./text/text.js";
-import { loadStylesheet } from "./core/stylesheet.js";
 import { appStore } from "./core/store.js";
 
-export class AboutPage extends HTMLElement {
+export class AboutPage extends BasePage {
   constructor() {
     super();
-    const shadow = this.attachShadow({ mode: "open" });
-    loadStylesheet(shadow, new URL("./app.css", import.meta.url).toString());
 
-    const container = document.createElement("div");
-    container.id = "root";
-    container.style.display = "flex";
-    container.style.flexDirection = "column";
-    container.style.alignItems = "center";
-    container.style.gap = "10px";
-
-    const header = document.createElement("h1");
-    header.textContent = "About Page";
+    const header = this.createHeader("About");
 
     const description = new CoolText({
       text: "About Page",
-      textColor: "#aaa",
-      textFontSize: "18px",
+      textColor: "var(--mdc-theme-on-surface)",
+      textFontSize: "1rem",
       ariaLabel: "About page description",
     });
 
-    appStore.subscribe((state) => {
-      description.text = state.lastClicked
-        ? `${state.lastClicked} clicked! Input: ${state.inputValue || "empty"}`
-        : `Input value: ${state.inputValue || "empty"}`;
-      container.style.backgroundColor = state.theme === "dark" ? "#333" : "";
-      description.textColor = state.theme === "dark" ? "#fff" : "#333";
-    });
+    // Subscribe to state changes
+    this.subscribeToStore(description);
 
-    container.append(header, description);
-    shadow.appendChild(container);
+    this.container.append(header, description);
   }
 }
 

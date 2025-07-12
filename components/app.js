@@ -25,16 +25,13 @@ class App extends HTMLElement {
     this.container.id = "app-container";
     this._shadow.appendChild(this.container);
 
-    // Handle navigation
     this.setupNavigation();
     this.renderPage();
 
-    // Listen for popstate events (browser back/forward)
     window.addEventListener("popstate", () => this.renderPage());
   }
 
   setupNavigation() {
-    // Handle nav link clicks
     document.querySelectorAll("nav a").forEach((link) => {
       link.addEventListener("click", (e) => {
         e.preventDefault();
@@ -44,41 +41,38 @@ class App extends HTMLElement {
       });
     });
 
-    // Update aria-current for accessibility
     this.updateActiveLink();
   }
 
   navigateTo(page) {
-    history.pushState({}, "", `/${page || "home"}`);
+    const basePath = import.meta.env?.BASE_URL || "/"; // Vite base path or fallback
+    history.pushState({}, "", `${basePath}${page || "home"}`);
     this.renderPage();
   }
 
   renderPage() {
-    const path = window.location.pathname.slice(1) || "home";
-    const route = routes[path] || routes["home"]; // Default to home for 404
+    const basePath = import.meta.env?.BASE_URL || "/";
+    const path =
+      window.location.pathname.replace(basePath, "").slice(1) || "home";
+    const route = routes[path] || routes["home"];
 
-    // Clear container
     this.container.innerHTML = "";
-
-    // Create and append component
     const component = new route.component();
     this.container.appendChild(component);
 
-    // Update document title
     document.title = route.title || "My App";
-
-    // Update active link for accessibility
     this.updateActiveLink();
 
-    // Focus management for accessibility
     this.container.setAttribute("tabindex", "-1");
     this.container.focus();
   }
 
   updateActiveLink() {
-    const path = window.location.pathname.slice(1) || "home";
+    const basePath = import.meta.env?.BASE_URL || "/";
+    const path =
+      window.location.pathname.replace(basePath, "").slice(1) || "home";
     document.querySelectorAll("nav a").forEach((link) => {
-      const href = link.getAttribute("href").slice(1);
+      const href = link.getAttribute("href").replace(basePath, "").slice(1);
       link.setAttribute("aria-current", href === path ? "page" : "false");
     });
   }

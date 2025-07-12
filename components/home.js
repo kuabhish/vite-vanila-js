@@ -1,31 +1,20 @@
 // components/home.js
+import { BasePage } from "./core/base-page.js";
 import { CoolButton } from "./button/button.js";
 import { CoolText } from "./text/text.js";
 import { CoolInput } from "./input/input.js";
-import { loadStylesheet } from "./core/stylesheet.js";
 import { appStore } from "./core/store.js";
 
-export class HomePage extends HTMLElement {
+export class HomePage extends BasePage {
   constructor() {
     super();
-    const shadow = this.attachShadow({ mode: "open" });
 
-    loadStylesheet(shadow, new URL("./app.css", import.meta.url).toString());
-
-    const container = document.createElement("div");
-    container.id = "root";
-    container.style.display = "flex";
-    container.style.flexDirection = "column";
-    container.style.alignItems = "center";
-    container.style.gap = "10px";
-
-    const header = document.createElement("h1");
-    header.textContent = "Home Page";
+    const header = this.createHeader("Home");
 
     const description = new CoolText({
       text: "Interact on Home Page!",
-      textColor: "#aaa",
-      textFontSize: "18px",
+      textColor: "var(--mdc-theme-on-surface)",
+      textFontSize: "1rem",
       ariaLabel: "Home page description",
     });
 
@@ -76,16 +65,9 @@ export class HomePage extends HTMLElement {
     });
 
     // Subscribe to state changes
-    appStore.subscribe((state) => {
-      description.text = state.lastClicked
-        ? `${state.lastClicked} clicked! Input: ${state.inputValue || "empty"}`
-        : `Input value: ${state.inputValue || "empty"}`;
-      input.value = state.inputValue;
-      container.style.backgroundColor = state.theme === "dark" ? "#333" : "";
-      description.textColor = state.theme === "dark" ? "#fff" : "#333";
-    });
+    this.subscribeToStore(description, input);
 
-    container.append(
+    this.container.append(
       header,
       description,
       input,
@@ -93,7 +75,6 @@ export class HomePage extends HTMLElement {
       resetButton,
       themeButton
     );
-    shadow.appendChild(container);
   }
 }
 

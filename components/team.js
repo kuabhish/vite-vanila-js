@@ -1,31 +1,20 @@
 // components/team.js
+import { BasePage } from "./core/base-page.js";
 import { CoolButton } from "./button/button.js";
 import { CoolText } from "./text/text.js";
 import { CoolInput } from "./input/input.js";
-import { loadStylesheet } from "./core/stylesheet.js";
 import { appStore } from "./core/store.js";
 
-export class TeamPage extends HTMLElement {
+export class TeamPage extends BasePage {
   constructor() {
     super();
-    const shadow = this.attachShadow({ mode: "open" });
 
-    loadStylesheet(shadow, new URL("./app.css", import.meta.url).toString());
-
-    const container = document.createElement("div");
-    container.id = "root";
-    container.style.display = "flex";
-    container.style.flexDirection = "column";
-    container.style.alignItems = "center";
-    container.style.gap = "10px";
-
-    const header = document.createElement("h1");
-    header.textContent = "Team Page";
+    const header = this.createHeader("Team");
 
     const description = new CoolText({
       text: "Interact on Team Page!",
-      textColor: "#aaa",
-      textFontSize: "18px",
+      textColor: "var(--mdc-theme-on-surface)",
+      textFontSize: "1rem",
       ariaLabel: "Team page description",
     });
 
@@ -66,17 +55,9 @@ export class TeamPage extends HTMLElement {
     });
 
     // Subscribe to state changes
-    appStore.subscribe((state) => {
-      description.text = state.lastClicked
-        ? `${state.lastClicked} clicked! Input: ${state.inputValue || "empty"}`
-        : `Input value: ${state.inputValue || "empty"}`;
-      input.value = state.inputValue;
-      container.style.backgroundColor = state.theme === "dark" ? "#333" : "";
-      description.textColor = state.theme === "dark" ? "#fff" : "#333";
-    });
+    this.subscribeToStore(description, input);
 
-    container.append(header, description, input, teamButton, themeButton);
-    shadow.appendChild(container);
+    this.container.append(header, description, input, teamButton, themeButton);
   }
 }
 
