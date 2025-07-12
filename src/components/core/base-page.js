@@ -1,26 +1,27 @@
-// src/core/base-page.js
+// src/components/core/base-page.js
+import { BaseComponent } from "./base-component.js";
 import { loadStylesheet } from "./stylesheet.js";
 import { appStore } from "./store.js";
 
-export class BasePage extends HTMLElement {
+export class BasePage extends BaseComponent {
   constructor() {
-    super();
-    this._shadow = this.attachShadow({ mode: "open" });
+    super(); // Calls BaseComponent constructor, which sets up this._shadow
 
     // Load shared stylesheet
     loadStylesheet(
       this._shadow,
-      new URL("../app.css", import.meta.url).toString()
+      new URL("../../app.css", import.meta.url).toString()
     );
 
     // Create container
-    this.container = document.createElement("div");
-    this.container.id = "root";
-    Object.assign(this.container.style, {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "16px", // Material Design spacing
+    this.container = this.createElement("div", {
+      id: "root",
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "16px", // Material Design spacing
+      },
     });
 
     this._shadow.appendChild(this.container);
@@ -28,9 +29,13 @@ export class BasePage extends HTMLElement {
 
   // Utility to create Material Design-styled header
   createHeader(text) {
-    const header = document.createElement("h1");
-    header.textContent = text;
-    header.classList.add("mdc-typography--headline5"); // Material Design typography
+    const header = this.createElement(
+      "h1",
+      {
+        class: "mdc-typography--headline5",
+      },
+      text
+    );
     return header;
   }
 
