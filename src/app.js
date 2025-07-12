@@ -1,8 +1,8 @@
 // components/app.js
 import { loadStylesheet } from "./core/stylesheet.js";
-import { HomePage } from "./home.js";
-import { TeamPage } from "./team.js";
-import { AboutPage } from "./about.js";
+import { HomePage } from "./pages/home.js";
+import { TeamPage } from "./pages/team.js";
+import { AboutPage } from "./pages/about.js";
 
 // Define routes
 const routes = {

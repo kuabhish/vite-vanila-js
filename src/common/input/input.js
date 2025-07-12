@@ -1,6 +1,6 @@
 // components/input/input.js
-import { BaseComponent } from "../core/base-component.js";
-import { BaseEvent } from "../core/event-system.js";
+import { BaseComponent } from "../../core/base-component.js";
+import { BaseEvent } from "../../core/event-system.js";
 
 export class CoolInput extends BaseComponent {
   constructor(options = {}) {

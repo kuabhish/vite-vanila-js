@@ -1,9 +1,9 @@
-// components/home.js
-import { BasePage } from "./core/base-page.js";
-import { CoolButton } from "./button/button.js";
-import { CoolText } from "./text/text.js";
-import { CoolInput } from "./input/input.js";
-import { appStore } from "./core/store.js";
+// components/pages/home.js
+import { BasePage } from "../core/base-page.js";
+import { CoolButton } from "../common/button/button.js";
+import { CoolText } from "../common/text/text.js";
+import { CoolInput } from "../common/input/input.js";
+import { appStore } from "../core/store.js";
 
 export class HomePage extends BasePage {
   constructor() {

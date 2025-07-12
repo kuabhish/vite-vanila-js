@@ -1,6 +1,6 @@
-// components/button/button.js
-import { BaseComponent } from "../core/base-component.js";
-import { BaseEvent } from "../core/event-system.js";
+// components/common/button/button.js
+import { BaseComponent } from "../../core/base-component.js";
+import { BaseEvent } from "../../core/event-system.js";
 
 export class CoolButton extends BaseComponent {
   constructor(options = {}) {
