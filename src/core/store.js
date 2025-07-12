@@ -1,4 +1,4 @@
-// components/core/store.js
+// src/core/store.js
 export class Store {
   constructor(reducer, initialState = {}) {
     this.state = { ...initialState };

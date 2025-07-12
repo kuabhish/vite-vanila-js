@@ -1,4 +1,4 @@
-// components/core/base-component.js
+// src/core/base-component.js
 export class BaseComponent extends HTMLElement {
   constructor(options = {}) {
     super();

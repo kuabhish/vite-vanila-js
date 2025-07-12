@@ -1,4 +1,4 @@
-// components/input/input.js
+// src/input/input.js
 import { BaseComponent } from "../../core/base-component.js";
 import { BaseEvent } from "../../core/event-system.js";
 

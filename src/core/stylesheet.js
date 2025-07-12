@@ -1,4 +1,4 @@
-// components/core/stylesheet.js
+// src/core/stylesheet.js
 export function loadStylesheet(shadow, url) {
   const styleLink = document.createElement("link");
   styleLink.setAttribute("rel", "stylesheet");

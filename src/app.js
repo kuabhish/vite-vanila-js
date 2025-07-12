@@ -1,4 +1,4 @@
-// components/app.js
+// src/app.js
 import { loadStylesheet } from "./core/stylesheet.js";
 import { HomePage } from "./pages/home.js";
 import { TeamPage } from "./pages/team.js";

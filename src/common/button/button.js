@@ -1,4 +1,4 @@
-// components/common/button/button.js
+// src/common/button/button.js
 import { BaseComponent } from "../../core/base-component.js";
 import { BaseEvent } from "../../core/event-system.js";
 

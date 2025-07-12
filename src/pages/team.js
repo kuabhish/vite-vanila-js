@@ -1,4 +1,4 @@
-// components/pages/team.js
+// src/pages/team.js
 import { BasePage } from "../core/base-page.js";
 import { CoolButton } from "../common/button/button.js";
 import { CoolText } from "../common/text/text.js";

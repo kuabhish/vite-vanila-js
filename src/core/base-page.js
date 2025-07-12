@@ -1,4 +1,4 @@
-// components/core/base-page.js
+// src/core/base-page.js
 import { loadStylesheet } from "./stylesheet.js";
 import { appStore } from "./store.js";
 

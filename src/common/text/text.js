@@ -1,4 +1,4 @@
-// components/text/text.js
+// src/text/text.js
 import { BaseComponent } from "../../core/base-component.js";
 
 export class CoolText extends BaseComponent {

@@ -1,4 +1,4 @@
-// components/pagesabout.js
+// src/pagesabout.js
 import { BasePage } from "../core/base-page.js";
 import { CoolText } from "../common/text/text.js";
 
