@@ -1,6 +1,6 @@
 // src/pagesabout.js
-import { BasePage } from "../core/base-page.js";
-import { CoolText } from "../common/text/text.js";
+import { BasePage } from "../components/core/base-page.js";
+import { CoolText } from "../components/base/text/text.js";
 
 export class AboutPage extends BasePage {
   constructor() {

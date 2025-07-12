@@ -1,5 +1,5 @@
 // src/app.js
-import { loadStylesheet } from "./core/stylesheet.js";
+import { loadStylesheet } from "./components/core/stylesheet.js";
 import { HomePage } from "./pages/home.js";
 import { TeamPage } from "./pages/team.js";
 import { AboutPage } from "./pages/about.js";

@@ -1,9 +1,9 @@
 // src/pages/team.js
-import { BasePage } from "../core/base-page.js";
-import { CoolButton } from "../common/button/button.js";
-import { CoolText } from "../common/text/text.js";
-import { CoolInput } from "../common/input/input.js";
-import { appStore } from "../core/store.js";
+import { BasePage } from "../components/core/base-page.js";
+import { CoolButton } from "../components/base/button/button.js";
+import { CoolText } from "../components/base/text/text.js";
+import { CoolInput } from "../components/base/input/input.js";
+import { appStore } from "../components/core/store.js";
 
 export class TeamPage extends BasePage {
   constructor() {
