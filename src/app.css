@@ -72,3 +72,16 @@ nav a[aria-current="page"] {
     transition: none;
   }
 }
+
+
+.home-page-main {
+  background: var(--mdc-theme-background);
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.team-page-main {
+  background: linear-gradient(to bottom, #f0f4ff, #e6eaff); /* Different background */
+  padding: 32px;
+  border-radius: 16px;
+}

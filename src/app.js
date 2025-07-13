@@ -52,8 +52,8 @@ class App extends HTMLElement {
 
   renderPage() {
     const basePath = import.meta.env?.BASE_URL || "/";
-    const path =
-      window.location.pathname.replace(basePath, "").slice(1) || "home";
+    const path = window.location.pathname.replace(basePath, "") || "home";
+    console.log("debug ---", path);
     const route = routes[path] || routes["home"];
 
     this.container.innerHTML = "";
