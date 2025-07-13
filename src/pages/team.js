@@ -38,12 +38,6 @@ export class TeamPage extends BasePage {
         image:
           "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=800",
       },
-      {
-        name: "Dev Mishra",
-        role: "Backend Engineer",
-        image:
-          "https://images.unsplash.com/photo-1603415526960-f9eafa6eb5b4?auto=format&fit=crop&w=800&q=80",
-      },
     ];
 
     // Grid container for team cards

@@ -53,6 +53,7 @@ export class BasePage extends BaseComponent {
         {
           href: link.href,
           "aria-current": "false",
+          role: "link",
           style: {
             textDecoration: "none",
             color: "var(--mdc-theme-primary)",
@@ -66,10 +67,21 @@ export class BasePage extends BaseComponent {
       );
       navLink.addEventListener("click", (e) => {
         e.preventDefault();
-        const page = link.href.slice(1) || "home"; // Extract page from href
+        const page = link.href.replace(/^\//, "") || "home";
+        console.log("Navigating to:", page); // Debug log
         this.dispatchEvent(
-          new CustomEvent("navigate", { detail: { page }, bubbles: true })
+          new CustomEvent("navigate", {
+            detail: { page },
+            bubbles: true,
+            composed: true, // Ensure event crosses Shadow DOM boundary
+          })
         );
+      });
+      navLink.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          navLink.click();
+        }
       });
       this.nav.appendChild(navLink);
     });
@@ -144,12 +156,15 @@ export class BasePage extends BaseComponent {
     });
   }
 
-  // Update active link based on current page
   updateActiveLink(currentPage) {
     const basePath = import.meta.env?.BASE_URL || "/";
-    const path = currentPage.replace(basePath, "") || "home";
+    const path = currentPage.replace(basePath, "").replace(/^\//, "") || "home";
+    console.log("Updating active link for:", path); // Debug log
     this.nav.querySelectorAll("a").forEach((link) => {
-      const href = link.getAttribute("href").replace(basePath, "").slice(1);
+      const href = link
+        .getAttribute("href")
+        .replace(basePath, "")
+        .replace(/^\//, "");
       link.setAttribute("aria-current", href === path ? "page" : "false");
     });
   }

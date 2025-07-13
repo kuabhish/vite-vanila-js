@@ -77,7 +77,7 @@ nav a:hover {
 }
 
 nav a[aria-current="page"] {
-  background: var(--mdc-theme-primary);
+  /* background: var(--mdc-theme-primary); */
   color: var(--mdc-theme-on-primary);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }

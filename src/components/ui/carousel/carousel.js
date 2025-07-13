@@ -2,6 +2,7 @@
 import { BaseComponent } from "../../core/base-component.js";
 import { BaseEvent } from "../../core/event-system.js";
 import { CoolImage } from "../../base/image/image.js"; // Import CoolImage
+import { CoolButton } from "../../base/button/button.js"; // Import CoolButton
 
 export class CoolCarousel extends BaseComponent {
   constructor(options = {}) {
@@ -17,25 +18,28 @@ export class CoolCarousel extends BaseComponent {
     this._track = this.createElement("div", { class: "mdc-carousel__track" });
     this._container.appendChild(this._track);
 
-    this._prevButton = this.createElement(
-      "button",
-      {
-        class: "mdc-carousel__button mdc-carousel__button--prev",
-        "aria-label": "Previous slide",
-      },
-      "◄"
-    );
-    this._nextButton = this.createElement(
-      "button",
-      {
-        class: "mdc-carousel__button mdc-carousel__button--next",
-        "aria-label": "Next slide",
-      },
-      "►"
-    );
+    // Use CoolButton for previous and next buttons
+    this._prevButton = new CoolButton({
+      title: "Previous",
+      type: "primary",
+      ariaLabel: "Previous slide",
+      supportIcons: true,
+      icon: "◄",
+      theme: "carousel", // Custom theme for carousel buttons
+    });
+    this._prevButton.classList.add("mdc-carousel__button--prev");
+    this._prevButton.onDidClick.addListener(() => this.prev());
 
-    this._prevButton.addEventListener("click", () => this.prev());
-    this._nextButton.addEventListener("click", () => this.next());
+    this._nextButton = new CoolButton({
+      title: "Next",
+      type: "primary",
+      ariaLabel: "Next slide",
+      supportIcons: true,
+      icon: "►",
+      theme: "carousel",
+    });
+    this._nextButton.classList.add("mdc-carousel__button--next");
+    this._nextButton.onDidClick.addListener(() => this.next());
 
     this._container.append(this._prevButton, this._track, this._nextButton);
 
@@ -80,6 +84,9 @@ export class CoolCarousel extends BaseComponent {
     return this._onChange;
   }
 
+  /**
+   * @param {never[]} value
+   */
   set items(value) {
     this._items = value || [];
     this._currentIndex = 0;
