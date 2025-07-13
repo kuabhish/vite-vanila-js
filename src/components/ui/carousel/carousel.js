@@ -1,4 +1,4 @@
-// components/carousel/carousel.js
+// src/components/carousel/carousel.js
 import { BaseComponent } from "../../core/base-component.js";
 import { BaseEvent } from "../../core/event-system.js";
 
