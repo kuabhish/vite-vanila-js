@@ -1,6 +1,7 @@
-// src/components/carousel/carousel.js
+// src/components/ui/carousel/carousel.js
 import { BaseComponent } from "../../core/base-component.js";
 import { BaseEvent } from "../../core/event-system.js";
+import { CoolImage } from "../../base/image/image.js"; // Import CoolImage
 
 export class CoolCarousel extends BaseComponent {
   constructor(options = {}) {
@@ -49,25 +50,17 @@ export class CoolCarousel extends BaseComponent {
     const item = this._items[this._currentIndex];
     const slide = this.createElement("div", { class: "mdc-carousel__slide" });
 
-    const img = this.createElement("img", {
+    // Use CoolImage instead of raw <img>
+    const image = new CoolImage({
       src: item.src,
       alt: item.alt,
-      style: { width: "100%", height: "auto", objectFit: "cover" },
+      caption: item.caption || "", // CoolImage handles caption rendering
+      width: "100%",
+      height: "auto",
+      style: { objectFit: "cover" }, // Pass additional styles if needed
     });
 
-    if (item.caption) {
-      const caption = this.createElement(
-        "div",
-        {
-          class: "mdc-typography--caption mdc-carousel__caption",
-        },
-        item.caption
-      );
-      slide.append(img, caption);
-    } else {
-      slide.appendChild(img);
-    }
-
+    slide.appendChild(image);
     this._track.appendChild(slide);
     this._onChange.dispatch({ index: this._currentIndex });
   }

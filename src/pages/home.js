@@ -2,9 +2,9 @@ import { BasePage } from "../components/core/base-page.js";
 import { CoolButton } from "../components/base/button/button.js";
 import { CoolText } from "../components/base/text/text.js";
 import { CoolInput } from "../components/base/input/input.js";
-import { CoolCarousel } from "../components/ui/carousel/carousel.js";
 import { CoolImage } from "../components/base/image/image.js";
 import { appStore } from "../components/core/store.js";
+import { CoolCarousel } from "../components/ui/carousel/carousel.js";
 
 export class HomePage extends BasePage {
   constructor() {
@@ -33,6 +33,16 @@ export class HomePage extends BasePage {
           caption: "Join Our Community",
         },
       ],
+    });
+
+    carousel.onChange.addListener(({ index }) => {
+      const slide = carousel._track.querySelector("cool-image");
+      if (slide) {
+        slide.onClick.addListener(({ event, src, alt }) => {
+          console.log(`Clicked image: ${src}, alt: ${alt}`);
+          alert(`You clicked on slide ${index + 1}: ${alt}`);
+        });
+      }
     });
 
     const welcomeText = new CoolText({

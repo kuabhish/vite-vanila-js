@@ -16,6 +16,9 @@ export class CoolImage extends BaseComponent {
     this._width = options.width || this.getAttribute("width") || "100%";
     this._height = options.height || this.getAttribute("height") || "auto";
 
+    // Initialize event for click
+    this._onClick = new BaseEvent();
+
     this.initShadowDom(new URL("./image.css", import.meta.url).toString());
 
     this._container = this.createElement("figure", {
@@ -33,6 +36,20 @@ export class CoolImage extends BaseComponent {
       },
     });
 
+    // Add click event listener to the image
+    this._img.addEventListener("click", (event) => {
+      this._onClick.dispatch({ event, src: this._src, alt: this._alt });
+    });
+
+    // Optional: Handle image load/error events
+    this._img.addEventListener("load", () => {
+      console.log(`Image loaded: ${this._src}`);
+    });
+    this._img.addEventListener("error", () => {
+      console.error(`Failed to load image: ${this._src}`);
+      this._img.src = "/fallback-image.jpg"; // Fallback image
+    });
+
     if (this._caption) {
       this._captionEl = this.createElement(
         "figcaption",
@@ -47,6 +64,11 @@ export class CoolImage extends BaseComponent {
     }
 
     this._shadow.appendChild(this._container);
+  }
+
+  // Getter for click event
+  get onClick() {
+    return this._onClick;
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
