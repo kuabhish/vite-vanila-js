@@ -5,9 +5,6 @@ import { CoolImage } from "../components/base/image/image.js";
 export class TeamPage extends BasePage {
   constructor() {
     super();
-
-    // Custom header title
-    this.header.innerHTML = "";
     this.header.appendChild(this.createHeader("🤝 Meet Our Team"));
 
     // Intro text

@@ -10,8 +10,6 @@ export class HomePage extends BasePage {
   constructor() {
     super();
 
-    // Optional: customize the shared header section
-    this.header.innerHTML = ""; // clear BasePage default
     this.header.appendChild(this.createHeader("🌱 Grow with My App"));
 
     // Carousel Section

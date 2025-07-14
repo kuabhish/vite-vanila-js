@@ -2,6 +2,7 @@
 import { BaseComponent } from "./base-component.js";
 import { loadStylesheet } from "./stylesheet.js";
 import { appStore } from "./store.js";
+import { Header } from "../ui/header/header.js";
 
 export class BasePage extends BaseComponent {
   constructor() {
@@ -25,79 +26,68 @@ export class BasePage extends BaseComponent {
       },
     });
 
-    // Navigation section
-    this.nav = this.createElement("nav", {
-      role: "navigation",
-      "aria-label": "Main navigation",
-      style: {
-        width: "100%",
-        padding: "16px",
-        background: "var(--mdc-theme-surface)",
-        boxShadow: "var(--mdc-elevation-2)",
-        display: "flex",
-        gap: "16px",
-        justifyContent: "center",
-      },
-    });
+    this.headerComponent = new Header(this);
+    this.header = this.headerComponent.header;
+    this.nav = this.headerComponent.nav;
 
-    // Define navigation links
-    const navLinks = [
-      { href: "/home", text: "Home" },
-      { href: "/team", text: "Team" },
-      { href: "/about", text: "About" },
-    ];
+    // this.container.addEventListener("navigate", (e) => {
+    //   console.log("debug listener .. ", e);
+    // });
 
-    navLinks.forEach((link) => {
-      const navLink = this.createElement(
-        "a",
-        {
-          href: link.href,
-          "aria-current": "false",
-          role: "link",
-          style: {
-            textDecoration: "none",
-            color: "var(--mdc-theme-primary)",
-            fontWeight: "500",
-            padding: "8px 16px",
-            borderRadius: "4px",
-            transition: "background 0.2s ease",
-          },
-        },
-        link.text
-      );
-      navLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        const page = link.href.replace(/^\//, "") || "home";
-        console.log("Navigating to:", page); // Debug log
-        this.dispatchEvent(
-          new CustomEvent("navigate", {
-            detail: { page },
-            bubbles: true,
-            composed: true, // Ensure event crosses Shadow DOM boundary
-          })
-        );
-      });
-      navLink.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          navLink.click();
-        }
-      });
-      this.nav.appendChild(navLink);
-    });
+    // // Navigation section
+    // this.nav = this.createElement("nav", {
+    //   role: "navigation",
+    //   "aria-label": "Main navigation",
+    //   style: {
+    //     width: "100%",
+    //     padding: "16px",
+    //     background: "var(--mdc-theme-surface)",
+    //     boxShadow: "var(--mdc-elevation-2)",
+    //     display: "flex",
+    //     gap: "16px",
+    //     justifyContent: "center",
+    //   },
+    // });
 
-    // Header section
-    this.header = this.createElement("header", {
-      style: {
-        width: "100%",
-        padding: "16px",
-        textAlign: "center",
-        backgroundColor: "var(--mdc-theme-surface)",
-        boxShadow: "var(--mdc-elevation-2)",
-      },
-    });
-    const defaultTitle = this.createHeader("🌟 My App");
-    this.header.appendChild(defaultTitle);
+    // // Define navigation links
+    // const navLinks = [
+    //   { href: "/home", text: "Home" },
+    //   { href: "/team", text: "Team" },
+    //   { href: "/finance", text: "Finance" },
+    // ];
+
+    // navLinks.forEach((link) => {
+    //   const navLink = this.createElement(
+    //     "a",
+    //     {
+    //       href: link.href,
+    //       "aria-current": "false",
+    //       role: "link",
+    //     },
+    //     link.text
+    //   );
+    //   navLink.addEventListener("click", (e) => {
+    //     e.preventDefault();
+    //     const page = link.href.replace(/^\//, "") || "home";
+    //     console.log("Navigating to:", page); // Debug log
+    //     this.dispatchEvent(
+    //       new CustomEvent("navigate", {
+    //         detail: { page },
+    //         bubbles: true,
+    //         composed: true, // Ensure event crosses Shadow DOM boundary
+    //       })
+    //     );
+    //   });
+    //   navLink.addEventListener("keydown", (e) => {
+    //     if (e.key === "Enter" || e.key === " ") {
+    //       e.preventDefault();
+    //       navLink.click();
+    //     }
+    //   });
+    //   this.nav.appendChild(navLink);
+    // });
+
+    // this.header = this.createElement("header");
 
     // Main content section (each page will populate this)
     this.main = this.createElement("main", {
@@ -124,19 +114,25 @@ export class BasePage extends BaseComponent {
     this.footer.innerHTML = `© ${new Date().getFullYear()} My App. All rights reserved.`;
 
     // Compose layout
-    this.container.append(this.nav, this.header, this.main, this.footer);
+    this.container.append(
+      this.headerComponent.nav,
+      this.header,
+      this.main,
+      this.footer
+    );
     this._shadow.appendChild(this.container);
   }
 
-  createHeader(text) {
-    const header = this.createElement(
-      "h1",
-      {
-        class: "mdc-typography--headline5",
-      },
-      text
-    );
-    return header;
+  createHeader(text, _class = "") {
+    return this.headerComponent.createHeader(text, _class);
+    // const header = this.createElement(
+    //   "h1",
+    //   {
+    //     class: "mdc-typography--headline5",
+    //   },
+    //   text
+    // );
+    // return header;
   }
 
   subscribeToStore(description, input = null) {

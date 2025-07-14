@@ -2,13 +2,11 @@
 import { loadStylesheet } from "./components/core/stylesheet.js";
 import { HomePage } from "./pages/home.js";
 import { TeamPage } from "./pages/team.js";
-import { AboutPage } from "./pages/about.js";
 
 // Define routes
 const routes = {
   home: { component: HomePage, title: "Home" },
   team: { component: TeamPage, title: "Team" },
-  about: { component: AboutPage, title: "About" },
 };
 
 class App extends HTMLElement {
@@ -27,6 +25,7 @@ class App extends HTMLElement {
 
     // Listen for navigate event from BasePage
     this.addEventListener("navigate", (e) => {
+      console.log("debug listener .. ", e);
       const { page } = e.detail;
       this.navigateTo(page);
     });
@@ -46,15 +45,19 @@ class App extends HTMLElement {
   renderPage() {
     const basePath = import.meta.env?.BASE_URL || "/";
     const path = window.location.pathname.replace(basePath, "") || "home";
-    console.log("Rendering page:", path);
+    console.log(
+      "Rendering page 11 :",
+      window.location.pathname.replace(basePath, "")
+    );
     const route = routes[path] || routes["home"];
 
     this.container.innerHTML = "";
     const component = new route.component();
     this.container.appendChild(component);
+    console.log("Rendering page:", path, component?.updateActiveLink);
 
     // Update active link if component is a BasePage
-    if (component.updateActiveLink) {
+    if (component?.updateActiveLink) {
       component.updateActiveLink(path);
     }
 
