@@ -3,6 +3,7 @@ import { BaseComponent } from "./base-component.js";
 import { loadStylesheet } from "./stylesheet.js";
 import { appStore } from "./store.js";
 import { Header } from "../ui/header/header.js";
+import { CoolFooter } from "../ui/footer/footer.js";
 
 export class BasePage extends BaseComponent {
   constructor() {
@@ -100,18 +101,21 @@ export class BasePage extends BaseComponent {
     });
 
     // Footer section
-    this.footer = this.createElement("footer", {
-      style: {
-        width: "100%",
-        padding: "16px",
-        fontSize: "0.9rem",
-        textAlign: "center",
-        backgroundColor: "var(--mdc-theme-surface)",
-        color: "var(--mdc-theme-on-surface)",
-        borderTop: "1px solid #ccc",
-      },
-    });
-    this.footer.innerHTML = `© ${new Date().getFullYear()} My App. All rights reserved.`;
+    // this.footer = this.createElement("footer", {
+    //   style: {
+    //     width: "100%",
+    //     padding: "16px",
+    //     fontSize: "0.9rem",
+    //     textAlign: "center",
+    //     backgroundColor: "var(--mdc-theme-surface)",
+    //     color: "var(--mdc-theme-on-surface)",
+    //     borderTop: "1px solid #ccc",
+    //   },
+    // });
+    // this.footer.innerHTML = `© ${new Date().getFullYear()} My App. All rights reserved.`;
+
+    this.footerComponent = new CoolFooter();
+    this.footer = this.footerComponent._footer;
 
     // Compose layout
     this.container.append(
