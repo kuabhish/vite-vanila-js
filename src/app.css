@@ -2,7 +2,7 @@
 :root {
   --mdc-theme-primary: #6200ee;
   --mdc-theme-secondary: #018786;
-  --mdc-theme-background: #ebebeb;
+  --mdc-theme-background: #b4b2b2;
   --mdc-theme-surface: #fff;
   --mdc-theme-on-primary: #b4b2b2;
   --mdc-theme-on-secondary: #fff;
@@ -14,14 +14,22 @@
   --mdc-nav-bg-end: #7c4dff;
   margin: 0;
   padding: 0;
+
+  font-family: 'Roboto', 'Inter', 'Segoe UI', Arial, sans-serif;
+  margin: 0 auto;
+  background: var(--mdc-theme-surface);
+  border-radius: 8px;
+  box-shadow: var(--mdc-elevation-8);
+  transition: background 0.3s ease;
 }
+
 
 html, body {
   margin: 0;
   padding: 0;
 }
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
     --mdc-theme-background: #332b2b;
     --mdc-theme-surface: #434343;
@@ -30,18 +38,9 @@ html, body {
     --mdc-nav-bg-start: #3700b3;
     --mdc-nav-bg-end: #bb86fc;
   }
-} */
-
-#root {
-  /* padding: 24px; */
-  font-family: 'Roboto', 'Inter', 'Segoe UI', Arial, sans-serif;
-  margin: 0 auto;
-  text-align: center;
-  background: var(--mdc-theme-surface);
-  border-radius: 8px;
-  box-shadow: var(--mdc-elevation-8);
-  transition: background 0.3s ease;
 }
+
+
 
 .mdc-typography--headline5 {
   font-size: 1.5rem;
@@ -147,4 +146,17 @@ nav a:hover::after {
   background: linear-gradient(to bottom, #f0f4ff, #e6eaff);
   padding: 32px;
   border-radius: 16px;
+}
+
+
+/* src/app.css */
+.editor-page-main {
+  background: var(--mdc-theme-background);
+  /* padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  min-height: calc(100vh - 120px);
+  margin-bottom: 50px; */
 }

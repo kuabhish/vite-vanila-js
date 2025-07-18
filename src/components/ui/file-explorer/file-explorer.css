@@ -1,0 +1,48 @@
+/* src/components/ui/file-explorer/file-explorer.css */
+.file-explorer {
+  width: 250px;
+  background: var(--mdc-theme-surface);
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
+  font-family: 'Roboto', sans-serif;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.file-item:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.file-item--selected {
+  background: var(--mdc-theme-primary);
+  color: var(--mdc-theme-on-primary);
+}
+
+.file-item__icon {
+  margin-right: 8px;
+  font-size: 1rem;
+}
+
+.file-item__name {
+  flex: 1;
+}
+
+.file-item--folder {
+  font-weight: 600;
+}
+
+.file-item__children {
+  margin-left: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+  
+}

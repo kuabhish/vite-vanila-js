@@ -8,6 +8,7 @@ export class BaseComponent extends HTMLElement {
 
   // Initialize shadow DOM with optional stylesheet
   initShadowDom(stylesheetUrl) {
+    console.log("style sheet url ", stylesheetUrl);
     if (stylesheetUrl) {
       const styleLink = document.createElement("link");
       styleLink.setAttribute("rel", "stylesheet");

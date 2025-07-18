@@ -1,5 +1,6 @@
 // src/app.js
 import { loadStylesheet } from "./components/core/stylesheet.js";
+import { Editor } from "./pages/editor.js";
 import { HomePage } from "./pages/home.js";
 import { TeamPage } from "./pages/team.js";
 
@@ -7,6 +8,7 @@ import { TeamPage } from "./pages/team.js";
 const routes = {
   home: { component: HomePage, title: "Home" },
   team: { component: TeamPage, title: "Team" },
+  editor: { component: Editor, title: "Editor" },
 };
 
 class App extends HTMLElement {

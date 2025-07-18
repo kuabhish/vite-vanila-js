@@ -8,7 +8,7 @@ export class CoolFooter extends BaseComponent {
     this._footer = this.createElement("footer", {
       style: { textAlign: "center", padding: "16px" },
     });
-    this._footer.innerHTML = `© ${new Date().getFullYear()} My App. <a href="/contact">Contact Us</a>`;
+    this._footer.innerHTML = `© ${new Date().getFullYear()} My App. <a href="/">Contact Us</a>`;
     this._shadow.appendChild(this._footer);
   }
 }

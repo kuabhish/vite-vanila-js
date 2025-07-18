@@ -28,6 +28,7 @@ export class Header extends BaseComponent {
       { href: "/home", text: "Home" },
       { href: "/team", text: "Team" },
       { href: "/finance", text: "Finance" },
+      { href: "/editor", text: "Editor" },
     ];
 
     navLinks.forEach((link) => {
