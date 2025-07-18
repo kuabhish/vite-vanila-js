@@ -3,14 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A dynamic vanilla JavaScript app built with Web Components">
-  <meta name="keywords" content="vanilla js, web components, spa">
+  <meta name="description" content="A dynamic TypeScript app built with Web Components">
+  <meta name="keywords" content="typescript, web components, spa">
   <title>My App</title>
-  <link rel="stylesheet" href="/src/app.css"> <!-- Preload main stylesheet -->
+  <!-- Vite will inject the compiled CSS in production -->
+  <link rel="stylesheet" href="/src/app.css">
 </head>
 <body>
   <app-root role="main"></app-root>
-  <script type="module" src="/src/app.js"></script>
+  <!-- Vite will inject the compiled JS in production -->
+  <script type="module" src="/src/app.ts"></script>
   <noscript>
     <p>This site requires JavaScript to function. Please enable JavaScript or use a compatible browser.</p>
   </noscript>

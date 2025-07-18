@@ -9,4 +9,5 @@ export default defineConfig({
   server: {
     open: true, // Open browser on dev server start
   },
+  base: "/",
 });
