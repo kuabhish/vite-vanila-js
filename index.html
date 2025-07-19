@@ -7,11 +7,14 @@
   <meta name="keywords" content="typescript, web components, spa">
   <title>My App</title>
   <!-- Vite will inject the compiled CSS in production -->
+  <link rel="stylesheet" href="/libs/github-markdown.min.css" />
   <link rel="stylesheet" href="/src/app.css">
+  
 </head>
 <body>
   <app-root role="main"></app-root>
   <!-- Vite will inject the compiled JS in production -->
+  <script src="/libs/marked.min.js"></script>
   <script type="module" src="/src/app.ts"></script>
   <noscript>
     <p>This site requires JavaScript to function. Please enable JavaScript or use a compatible browser.</p>

@@ -10,7 +10,28 @@
   overflow: hidden;
 }
 
-/* Existing styles for .tab-bar and textarea remain unchanged */
+.editor-container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.editor-container.split {
+  flex-direction: row;
+}
+
+.editor-container.split textarea {
+  flex: 1;
+  border-right: 1px solid var(--mdc-theme-outline, #ddd);
+}
+
+.editor-container.split markdown-preview {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--mdc-theme-background, #fff);
+}
+
 .tab-bar {
   display: flex;
   flex-direction: row;
@@ -85,5 +106,12 @@ textarea:focus {
   }
   .tab.active {
     color: rgb(255, 255, 255);
+  }
+  .editor-container.split markdown-preview {
+    background: var(--mdc-theme-background, #1e1e1e);
+    color: var(--mdc-theme-on-background, #ddd);
+  }
+  .editor-container.split textarea {
+    border-right-color: var(--mdc-theme-outline, #444);
   }
 }

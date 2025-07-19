@@ -4,13 +4,15 @@ import { CoolTab } from '../tab/tab';
 
 interface TabBarOptions {
   tabs?: { path: string; label: string }[];
-  selectedTab?: string; // Path of the selected tab
+  selectedTab?: string;
 }
 
 export class CoolTabBar extends BaseComponent {
   private _tabBar: HTMLDivElement;
   private _tabs: Map<string, CoolTab> = new Map();
   private _selectedTab: string | null = null;
+  private _previewButton: HTMLButtonElement;
+  private _isPreviewActive: boolean = false;
 
   constructor(options: TabBarOptions = {}) {
     super(options);
@@ -20,6 +22,19 @@ export class CoolTabBar extends BaseComponent {
 
     this._tabBar = this.createElement('div', { class: 'tab-bar', role: 'tablist' });
 
+    // Create preview button
+    this._previewButton = this.createElement('button', {
+      class: 'preview-button',
+      'aria-label': 'Toggle markdown preview',
+      title: 'Toggle Markdown Preview',
+    }, 'Preview');
+    this._previewButton.addEventListener('click', () => {
+      this._isPreviewActive = !this._isPreviewActive;
+      this._previewButton.classList.toggle('active', this._isPreviewActive);
+      this.dispatchEvent(new CustomEvent('preview-toggled', { detail: { isActive: this._isPreviewActive } }));
+    });
+
+    this._tabBar.appendChild(this._previewButton);
     this._shadow.appendChild(this._tabBar);
 
     this.renderTabs(tabs, selectedTab);
@@ -54,11 +69,11 @@ export class CoolTabBar extends BaseComponent {
           this.dispatchEvent(new CustomEvent('tab-selected', { detail: { path } }));
         });
         tab.onDidClose.addListener(() => {
-          console.log("listening close tab ")
+          console.log("listening close tab ");
           this.dispatchEvent(new CustomEvent('tab-closed', { detail: { path } }));
         });
         this._tabs.set(path, tab);
-        this._tabBar.appendChild(tab);
+        this._tabBar.insertBefore(tab, this._previewButton); // Insert before preview button
       } else {
         tab.label = label;
         tab.active = path === selectedTab;
@@ -66,12 +81,22 @@ export class CoolTabBar extends BaseComponent {
     }
 
     this._selectedTab = selectedTab;
+    this.updatePreviewButton();
   }
 
   private updateActiveTab(): void {
     this._tabs.forEach((tab, path) => {
       tab.active = path === this._selectedTab;
     });
+  }
+
+  private updatePreviewButton(): void {
+    const isMarkdown = this._selectedTab?.toLowerCase().endsWith('.md') || this._selectedTab?.toLowerCase().endsWith('.markdown');
+    this._previewButton.style.display = isMarkdown ? 'block' : 'none';
+    if (!isMarkdown) {
+      this._isPreviewActive = false;
+      this._previewButton.classList.remove('active');
+    }
   }
 
   setTabs(tabs: { path: string; label: string }[], selectedTab: string | null): void {
@@ -81,6 +106,7 @@ export class CoolTabBar extends BaseComponent {
   dispose(): void {
     this._tabs.forEach(tab => tab.dispose());
     this._tabs.clear();
+    this._previewButton.remove();
     this._tabBar.remove();
     this._shadow.innerHTML = '';
   }

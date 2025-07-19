@@ -4,13 +4,17 @@ import { appStore } from '../../core/store';
 import { FileItem } from '../../core/store';
 import { CoolTabBar } from '../../base/tab-bar/tab-bar';
 import { CoolBreadcrumb } from '../../base/breadcrumb/breadcrumb';
+import { MarkdownPreview } from '../../base/markdown-preview/markdown-preview';
 
 export class CodeEditor extends BaseComponent {
   private _container: HTMLDivElement;
   private _tabBar: CoolTabBar;
   private _breadcrumb: CoolBreadcrumb;
   private _textarea: HTMLTextAreaElement;
+  private _editorContainer: HTMLDivElement;
+  private _markdownPreview: MarkdownPreview | null = null;
   private _selectedFile: string | null = null;
+  private _isPreviewActive: boolean = false;
 
   constructor() {
     super();
@@ -19,15 +23,17 @@ export class CodeEditor extends BaseComponent {
     this._container = this.createElement('div', { class: 'code-editor' });
     this._tabBar = new CoolTabBar();
     this._breadcrumb = new CoolBreadcrumb();
+    this._editorContainer = this.createElement('div', { class: 'editor-container' });
     this._textarea = this.createElement('textarea', {
       placeholder: 'Select a file to edit...',
       'aria-label': 'Code editor',
       id: 'code-textarea',
     });
 
+    this._editorContainer.appendChild(this._textarea);
     this._container.appendChild(this._tabBar);
     this._container.appendChild(this._breadcrumb);
-    this._container.appendChild(this._textarea);
+    this._container.appendChild(this._editorContainer);
     this._shadow.appendChild(this._container);
 
     this._textarea.addEventListener('input', () => {
@@ -39,6 +45,9 @@ export class CodeEditor extends BaseComponent {
             content: this._textarea.value,
           },
         });
+        if (this._isPreviewActive && this._markdownPreview) {
+          this._markdownPreview.update(this._textarea.value);
+        }
       }
     });
 
@@ -50,18 +59,26 @@ export class CodeEditor extends BaseComponent {
     });
 
     this._tabBar.addEventListener('tab-closed', (e: Event) => {
-
       const { path } = (e as CustomEvent<{ path: string }>).detail;
       const state = appStore.getState();
       const remainingTabs = state.openFiles.filter(f => f !== path);
       const newSelected = this._selectedFile === path
         ? remainingTabs[remainingTabs.length - 1] || null
         : this._selectedFile;
-
-      console.log("tab closed... ", path, state.openFiles, remainingTabs, newSelected)
       appStore.dispatch({ type: 'SET_OPEN_FILES', payload: remainingTabs });
       appStore.dispatch({ type: 'SET_SELECTED_FILE', payload: newSelected });
     });
+
+    this._tabBar.addEventListener('preview-toggled', (e: Event) => {
+      const { isActive } = (e as CustomEvent<{ isActive: boolean }>).detail;
+      this._isPreviewActive = isActive;
+      this.togglePreview();
+    });
+
+    // this._breadcrumb.onSegmentClick.addListener((e: CustomEvent<{ path: string }>) => {
+    //   const { path } = e.detail;
+    //   appStore.dispatch({ type: 'SET_SELECTED_FILE', payload: path });
+    // });
 
     this.subscribeToStore();
   }
@@ -78,6 +95,21 @@ export class CodeEditor extends BaseComponent {
     }
   };
 
+  private togglePreview(): void {
+    if (this._isPreviewActive && !this._markdownPreview) {
+      this._markdownPreview = new MarkdownPreview();
+      this._editorContainer.classList.add('split');
+      this._editorContainer.appendChild(this._markdownPreview);
+      if (this._selectedFile) {
+        this._markdownPreview.update(this._textarea.value);
+      }
+    } else if (!this._isPreviewActive && this._markdownPreview) {
+      this._markdownPreview.dispose();
+      this._markdownPreview = null;
+      this._editorContainer.classList.remove('split');
+    }
+  }
+
   private subscribeToStore(): void {
     appStore.subscribe((state) => {
       this._selectedFile = state.selectedFile;
@@ -91,6 +123,9 @@ export class CodeEditor extends BaseComponent {
         this._selectedFile
       );
       this._breadcrumb.setPath(this._selectedFile);
+      if (this._markdownPreview && this._selectedFile) {
+        this._markdownPreview.update(this._textarea.value);
+      }
     });
   }
 
@@ -110,6 +145,9 @@ export class CodeEditor extends BaseComponent {
     window.removeEventListener('keydown', this.handleKeydown);
     this._tabBar.dispose();
     this._breadcrumb.dispose();
+    if (this._markdownPreview) {
+      this._markdownPreview.dispose();
+    }
   }
 }
 
