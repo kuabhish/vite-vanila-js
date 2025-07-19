@@ -54,6 +54,7 @@ export class CoolTabBar extends BaseComponent {
           this.dispatchEvent(new CustomEvent('tab-selected', { detail: { path } }));
         });
         tab.onDidClose.addListener(() => {
+          console.log("listening close tab ")
           this.dispatchEvent(new CustomEvent('tab-closed', { detail: { path } }));
         });
         this._tabs.set(path, tab);

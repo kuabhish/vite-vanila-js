@@ -54,7 +54,7 @@ export class BasePage extends BaseComponent {
     if (show_header) {
       this.container.append(this.headerComponent!.nav, this.header!, this.main, this.footer);
     } else {
-      this.container.append(this.main, this.footer);
+      this.container.append(this.main);
     }
 
     this._shadow.appendChild(this.container);
@@ -81,15 +81,15 @@ export class BasePage extends BaseComponent {
     });
   }
 
-  updateActiveLink(currentPage: string): void {
-    const basePath = import.meta.env?.BASE_URL || '/';
-    const path = currentPage.replace(basePath, '').replace(/^\//, '') || 'home';
-    console.log('Updating active link for:', path);
-    this.nav?.querySelectorAll('a').forEach((link) => {
-      const href = link.getAttribute('href')?.replace(basePath, '').replace(/^\//, '') || '';
-      link.setAttribute('aria-current', href === path ? 'page' : 'false');
-    });
-  }
+  // updateActiveLink(currentPage: string): void {
+  //   const basePath = import.meta.env?.BASE_URL || '/';
+  //   const path = currentPage.replace(basePath, '').replace(/^\//, '') || 'home';
+  //   console.log('Updating active link for:', path);
+  //   this.nav?.querySelectorAll('a').forEach((link) => {
+  //     const href = link.getAttribute('href')?.replace(basePath, '').replace(/^\//, '') || '';
+  //     link.setAttribute('aria-current', href === path ? 'page' : 'false');
+  //   });
+  // }
 }
 
 customElements.define('base-page', BasePage);

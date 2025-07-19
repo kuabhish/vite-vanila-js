@@ -121,6 +121,8 @@ function reducer(state: AppState, action: Action): AppState {
       return { ...state, files: action.payload };
     case 'SET_SELECTED_FILE':
       return { ...state, selectedFile: action.payload, openFiles: state.openFiles.includes(action.payload) ? state.openFiles : [...state.openFiles, action.payload] };
+    case "SET_OPEN_FILES":
+      return { ...state, openFiles: action.payload };
     case 'UPDATE_FILE_CONTENT':
       return {
         ...state,

@@ -42,6 +42,7 @@ export class CoolTab extends BaseComponent {
     if (closable) {
       this._closeBtn = this.createElement('span', { class: 'close-tab', 'aria-label': `Close ${label}` }, '×');
       this._closeBtn.addEventListener('click', (e: MouseEvent) => {
+        console.log("close button press ")
         e.stopPropagation();
         this._onDidClose.dispatch(e);
       });

@@ -66,7 +66,7 @@ export class Header extends BaseComponent {
           navLink.click();
         }
       });
-      this.nav.appendChild(navLink);
+      // this.nav.appendChild(navLink);
     });
 
     this.header = this.createElement('header');

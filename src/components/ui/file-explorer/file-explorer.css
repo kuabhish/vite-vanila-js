@@ -42,6 +42,7 @@
 
 .file-item__name {
   flex: 1;
+  color:rgb(147, 148, 149)
 }
 
 .file-item--folder {

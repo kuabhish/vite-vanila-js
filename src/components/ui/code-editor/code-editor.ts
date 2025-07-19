@@ -3,10 +3,12 @@ import { BaseComponent } from '../../core/base-component';
 import { appStore } from '../../core/store';
 import { FileItem } from '../../core/store';
 import { CoolTabBar } from '../../base/tab-bar/tab-bar';
+import { CoolBreadcrumb } from '../../base/breadcrumb/breadcrumb';
 
 export class CodeEditor extends BaseComponent {
   private _container: HTMLDivElement;
   private _tabBar: CoolTabBar;
+  private _breadcrumb: CoolBreadcrumb;
   private _textarea: HTMLTextAreaElement;
   private _selectedFile: string | null = null;
 
@@ -16,6 +18,7 @@ export class CodeEditor extends BaseComponent {
 
     this._container = this.createElement('div', { class: 'code-editor' });
     this._tabBar = new CoolTabBar();
+    this._breadcrumb = new CoolBreadcrumb();
     this._textarea = this.createElement('textarea', {
       placeholder: 'Select a file to edit...',
       'aria-label': 'Code editor',
@@ -23,6 +26,7 @@ export class CodeEditor extends BaseComponent {
     });
 
     this._container.appendChild(this._tabBar);
+    this._container.appendChild(this._breadcrumb);
     this._container.appendChild(this._textarea);
     this._shadow.appendChild(this._container);
 
@@ -41,17 +45,20 @@ export class CodeEditor extends BaseComponent {
     window.addEventListener('keydown', this.handleKeydown);
 
     this._tabBar.addEventListener('tab-selected', (e: Event) => {
-      const { path } = (e as CustomEvent).detail;
+      const { path } = (e as CustomEvent<{ path: string }>).detail;
       appStore.dispatch({ type: 'SET_SELECTED_FILE', payload: path });
     });
 
     this._tabBar.addEventListener('tab-closed', (e: Event) => {
-      const { path } = (e as CustomEvent).detail;
+
+      const { path } = (e as CustomEvent<{ path: string }>).detail;
       const state = appStore.getState();
       const remainingTabs = state.openFiles.filter(f => f !== path);
       const newSelected = this._selectedFile === path
         ? remainingTabs[remainingTabs.length - 1] || null
         : this._selectedFile;
+
+      console.log("tab closed... ", path, state.openFiles, remainingTabs, newSelected)
       appStore.dispatch({ type: 'SET_OPEN_FILES', payload: remainingTabs });
       appStore.dispatch({ type: 'SET_SELECTED_FILE', payload: newSelected });
     });
@@ -83,6 +90,7 @@ export class CodeEditor extends BaseComponent {
         })),
         this._selectedFile
       );
+      this._breadcrumb.setPath(this._selectedFile);
     });
   }
 
@@ -101,6 +109,7 @@ export class CodeEditor extends BaseComponent {
   disconnectedCallback(): void {
     window.removeEventListener('keydown', this.handleKeydown);
     this._tabBar.dispose();
+    this._breadcrumb.dispose();
   }
 }
 

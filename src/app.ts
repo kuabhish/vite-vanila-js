@@ -10,9 +10,9 @@ interface Route {
 }
 
 const routes: Record<string, Route> = {
-  home: { component: HomePage, title: 'Home' },
-  team: { component: TeamPage, title: 'Team' },
-  editor: { component: Editor, title: 'Editor' },
+  // home: { component: HomePage, title: 'Home' },
+  // team: { component: TeamPage, title: 'Team' },
+  home: { component: Editor, title: 'Editor' },
 };
 
 class App extends HTMLElement {
