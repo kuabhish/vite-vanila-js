@@ -54,7 +54,7 @@ export class FileExplorer extends BaseComponent {
         display: 'flex',
         flexDirection: 'row',
         gap: '8px',
-        marginBottom: '12px',
+        // marginBottom: '12px',
       }
     });
 
