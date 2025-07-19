@@ -14,10 +14,53 @@ export class FileExplorer extends BaseComponent {
     super();
     this._onFileSelect = new BaseEvent<FileItem>();
     this.initShadowDom(new URL('./file-explorer.css', import.meta.url).toString());
+
+    const wrapper = this.createElement('div', { class: 'file-explorer-wrapper' });
+    this.createUI(wrapper); // Pass the wrapper
     this._container = this.createElement('div', { class: 'file-explorer' });
-    this._shadow.appendChild(this._container);
+
+    wrapper.appendChild(this._container);
+    this._shadow.appendChild(wrapper);
+
     this.subscribeToStore();
     this.render();
+  }
+
+  private createUI(parent: HTMLElement) {
+    const addFolderBtn = this.createElement('div', {
+      class: 'file-explorer__add-folder',
+    }, '+ New Folder');
+
+    addFolderBtn.addEventListener('click', () => {
+      const name = prompt('Folder name:');
+      if (name) {
+        this.addNewFolder(name);
+      }
+    });
+
+    const addFileButton = this.createElement('div', {
+      class: 'file-explorer__add-folder',
+    }, '+ New File');
+
+    addFileButton.addEventListener('click', () => {
+      const name = prompt('Folder name:');
+      if (name) {
+        this.addNewFile(name);
+      }
+    });
+
+    const buttonGroup = this.createElement('div', {
+      style: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: '8px',
+        marginBottom: '12px',
+      }
+    });
+
+    buttonGroup.appendChild(addFileButton);
+    buttonGroup.appendChild(addFolderBtn);
+    parent.appendChild(buttonGroup);
   }
 
   private subscribeToStore(): void {
@@ -40,6 +83,37 @@ export class FileExplorer extends BaseComponent {
           }`,
       });
 
+
+      fileItem.setAttribute('draggable', 'true');
+
+      fileItem.addEventListener('dragstart', (e: DragEvent) => {
+        e.dataTransfer?.setData('text/plain', item.path);
+        e.stopPropagation();
+      });
+
+      fileItem.addEventListener('dragover', (e: DragEvent) => {
+        if (item.isFolder) {
+          e.preventDefault();
+        }
+      });
+
+      fileItem.addEventListener('drop', (e: DragEvent) => {
+        e.preventDefault();
+        fileItem.classList.remove('file-item--drop-target');
+        const sourcePath = e.dataTransfer?.getData('text/plain');
+        if (item.isFolder && sourcePath && sourcePath !== item.path) {
+          this.moveFile(sourcePath, item.path);
+        }
+      });
+
+      fileItem.addEventListener('dragenter', (e) => {
+        if (item.isFolder) fileItem.classList.add('file-item--drop-target');
+      });
+
+      fileItem.addEventListener('dragleave', (e) => {
+        fileItem.classList.remove('file-item--drop-target');
+      });
+
       const icon = this.createElement(
         'span',
         { class: 'file-item__icon' },
@@ -47,7 +121,6 @@ export class FileExplorer extends BaseComponent {
       );
 
       const name = this.createElement('span', { class: 'file-item__name' }, item.name);
-
       fileItem.append(icon, name);
 
       fileItem.addEventListener('click', (e: MouseEvent) => {
@@ -60,6 +133,17 @@ export class FileExplorer extends BaseComponent {
         }
       });
 
+      const deleteBtn = this.createElement('div', {
+        class: 'file-item__delete',
+        title: 'Delete',
+      }, '🗑️');
+
+      deleteBtn.addEventListener('click', (e: MouseEvent) => {
+        e.stopPropagation(); // Don’t trigger select
+        this.deleteFile(item.path);
+      });
+
+      fileItem.appendChild(deleteBtn);
       parentElement.appendChild(fileItem);
 
       if (item.isFolder && item.isOpen && item.children) {
@@ -71,6 +155,34 @@ export class FileExplorer extends BaseComponent {
       }
     });
   }
+
+  private addNewFolder(name: string): void {
+    const newFolder: FileItem = {
+      name,
+      path: `/${name}`, // Flat for now, or generate nested if needed
+      isFolder: true,
+      isOpen: false,
+      children: [],
+    };
+
+    const updated = [...this._files, newFolder];
+    appStore.dispatch({ type: 'SET_FILES', payload: updated });
+  }
+
+
+  private addNewFile(name: string): void {
+    const newFile: FileItem = {
+      name,
+      path: `/${name}`,
+      isFolder: false,
+      isOpen: false,
+      children: [],
+    };
+
+    const updated = [...this._files, newFile];
+    appStore.dispatch({ type: 'SET_FILES', payload: updated });
+  }
+
 
   private toggleFolder(item: FileItem): void {
     const updatedFiles = this._files.map((file) => {
@@ -100,6 +212,77 @@ export class FileExplorer extends BaseComponent {
       return child;
     });
   }
+
+  private deleteFile(pathToDelete: string): void {
+    const deleteRecursive = (items: FileItem[]): FileItem[] => {
+      return items
+        .filter(item => item.path !== pathToDelete)
+        .map(item => {
+          if (item.isFolder && item.children) {
+            return {
+              ...item,
+              children: deleteRecursive(item.children),
+            };
+          }
+          return item;
+        });
+    };
+
+    const updated = deleteRecursive(this._files);
+    appStore.dispatch({ type: 'SET_FILES', payload: updated });
+  }
+
+
+  private moveFile(sourcePath: string, targetFolderPath: string): void {
+    const moveRecursive = (items: FileItem[]): [FileItem[], FileItem | null] => {
+      let movedItem: FileItem | null = null;
+      const updated = items.filter((item) => {
+        if (item.path === sourcePath) {
+          movedItem = item;
+          return false; // remove it
+        } else if (item.isFolder && item.children) {
+          const [newChildren, found] = moveRecursive(item.children);
+          item.children = newChildren;
+          if (found) movedItem = found;
+        }
+        return true;
+      });
+      return [updated, movedItem];
+    };
+
+    const insertInto = (items: FileItem[]): void => {
+      items.forEach((item) => {
+        if (item.path === targetFolderPath && item.isFolder) {
+          item.children = item.children || [];
+          if (movedItem) {
+            // update path and children's paths
+            const updatePath = (node: FileItem, base: string): FileItem => {
+              const newPath = `${base}/${node.name}`;
+              const updated = { ...node, path: newPath };
+              if (updated.children) {
+                updated.children = updated.children.map((c) => updatePath(c, newPath));
+              }
+              return updated;
+            };
+            const updatedItem = updatePath(movedItem, item.path);
+            item.children.push(updatedItem);
+          }
+        } else if (item.isFolder && item.children) {
+          insertInto(item.children);
+        }
+      });
+    };
+
+    let movedItem: FileItem | null = null;
+    const [withoutItem, found] = moveRecursive([...this._files]);
+    movedItem = found;
+
+    if (movedItem) {
+      insertInto(withoutItem);
+      appStore.dispatch({ type: 'SET_FILES', payload: withoutItem });
+    }
+  }
+
 
   get onFileSelect(): BaseEvent<FileItem> {
     return this._onFileSelect;

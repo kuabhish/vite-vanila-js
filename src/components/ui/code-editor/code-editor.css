@@ -1,24 +1,61 @@
-/* src/components/ui/code-editor/code-editor.css */
 .code-editor {
   display: flex;
+  flex-direction: column;
   background: var(--mdc-theme-surface);
   border-radius: 8px;
   box-shadow: var(--mdc-elevation-2);
   height: 100%;
-  width: 100%
+  width: 100%;
+  overflow: hidden;
+}
+
+.tab-bar {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  border-bottom: 1px solid var(--mdc-theme-outline);
+  background-color: var(--mdc-theme-background);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.tab {
+  padding: 8px 12px;
+  cursor: pointer;
+  user-select: none;
+  background-color: var(--mdc-theme-background-1);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 4px;
+  color: rgb(80, 80, 80);
+}
+
+.tab.active {
+  background-color: var(--mdc-theme-primary);
+  color: rgb(190, 190, 190);
+  font-weight: bold;
+}
+
+.close-tab {
+  margin-left: 8px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 textarea {
+  flex: 1;
   width: 100%;
-  height: 100%;
+  min-height: 0;
   padding: 12px;
-  border: 1px solid var(--mdc-theme-on-surface);
-  border-radius: 6px;
+  border: none;
+  border-top: 1px solid var(--mdc-theme-outline);
   font-family: 'Courier New', monospace;
   font-size: 0.95rem;
   background: var(--mdc-theme-background);
   color: var(--mdc-theme-on-background);
   resize: none;
+  box-sizing: border-box;
 }
 
 textarea:focus {

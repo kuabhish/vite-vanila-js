@@ -32,11 +32,12 @@ html, body {
 @media (prefers-color-scheme: dark) {
   :root {
     --mdc-theme-background: #332b2b;
-    --mdc-theme-surface: #434343;
+    --mdc-theme-surface: #292828;
     --mdc-theme-on-background: #fff;
     --mdc-theme-on-surface: #fff;
     --mdc-nav-bg-start: #3700b3;
     --mdc-nav-bg-end: #bb86fc;
+    --mdc-theme-background-1: #210606;
   }
 }
 
