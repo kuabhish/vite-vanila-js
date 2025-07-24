@@ -1,7 +1,15 @@
 /* src/components/ui/code-editor/code-editor.css */
+.code-editor-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%
+}
+
 .code-editor {
   display: flex;
   flex-direction: column;
+  flex: 1;
   background: var(--mdc-theme-surface, #fff);
   border-radius: 8px;
   box-shadow: var(--mdc-elevation-2, 0 2px 4px rgba(0, 0, 0, 0.2));
@@ -10,13 +18,20 @@
   overflow: hidden;
 }
 
+.preview-screen {
+  display: block;
+  flex: 1;
+  width: 100%
+}
+
+
 .editor-container {
   display: flex;
   flex: 1;
   min-height: 0;
 }
 
-.editor-container.split {
+/* .editor-container.split {
   flex-direction: row;
   gap: 12px;
 }
@@ -24,7 +39,7 @@
 .editor-container.split textarea {
   flex: 1;
   border-right: 1px solid var(--mdc-theme-outline, #ddd);
-}
+} */
 
 .editor-container.split markdown-preview {
   flex: 1;

@@ -7,7 +7,9 @@ import { CoolBreadcrumb } from '../../base/breadcrumb/breadcrumb';
 import { MarkdownPreview } from '../../base/markdown-preview/markdown-preview';
 
 export class CodeEditor extends BaseComponent {
+  private _wrapper: HTMLDivElement;
   private _container: HTMLDivElement;
+  private _rightSide: HTMLDivElement;
   private _tabBar: CoolTabBar;
   private _breadcrumb: CoolBreadcrumb;
   private _textarea: HTMLTextAreaElement;
@@ -19,8 +21,9 @@ export class CodeEditor extends BaseComponent {
   constructor() {
     super();
     this.initShadowDom(new URL('./code-editor.css', import.meta.url).toString());
-
+    this._wrapper = this.createElement('div', { class: 'code-editor-wrapper' });
     this._container = this.createElement('div', { class: 'code-editor' });
+    this._rightSide = this.createElement('div', { class: 'preview-screen' });
     this._tabBar = new CoolTabBar();
     this._breadcrumb = new CoolBreadcrumb();
     this._editorContainer = this.createElement('div', { class: 'editor-container' });
@@ -34,7 +37,8 @@ export class CodeEditor extends BaseComponent {
     this._container.appendChild(this._tabBar);
     this._container.appendChild(this._breadcrumb);
     this._container.appendChild(this._editorContainer);
-    this._shadow.appendChild(this._container);
+    this._wrapper.appendChild(this._container)
+    this._shadow.appendChild(this._wrapper);
 
     this._textarea.addEventListener('input', () => {
       if (this._selectedFile) {
@@ -96,19 +100,31 @@ export class CodeEditor extends BaseComponent {
   };
 
   private togglePreview(): void {
+    console.log("toggle preview")
     if (this._isPreviewActive && !this._markdownPreview) {
       this._markdownPreview = new MarkdownPreview();
       this._editorContainer.classList.add('split');
-      this._editorContainer.appendChild(this._markdownPreview);
+      this._rightSide.appendChild(this._markdownPreview);
+      this._wrapper.appendChild(this._rightSide);
       if (this._selectedFile) {
         this._markdownPreview.update(this._textarea.value);
       }
     } else if (!this._isPreviewActive && this._markdownPreview) {
       this._markdownPreview.dispose();
       this._markdownPreview = null;
-      this._editorContainer.classList.remove('split');
+      this._wrapper.removeChild(this._rightSide);
     }
   }
+
+  public closePreview() {
+    if (this._isPreviewActive && this._markdownPreview) {
+      this._markdownPreview.dispose();
+      this._markdownPreview = null;
+      this._wrapper.removeChild(this._rightSide);
+    }
+  }
+
+
 
   private subscribeToStore(): void {
     appStore.subscribe((state) => {

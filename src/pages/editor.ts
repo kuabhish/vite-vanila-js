@@ -2,6 +2,7 @@
 import { BasePage } from '../components/core/base-page';
 import { FileExplorer } from '../components/ui/file-explorer/file-explorer';
 import { CodeEditor } from '../components/ui/code-editor/code-editor';
+import { FileItem } from 'components/core/store';
 
 export class Editor extends BasePage {
   constructor() {
@@ -20,6 +21,19 @@ export class Editor extends BasePage {
 
     const fileExplorer = new FileExplorer();
     const codeEditor = new CodeEditor();
+
+    fileExplorer.onFileSelect.addListener((event: CustomEvent<FileItem>) => {
+      console.log("item selected", event.detail)
+      if (event?.detail?.name.includes(".md")) {
+        // is markdown
+      } else {
+        // close preview
+        codeEditor.closePreview()
+      }
+
+    });
+
+
     codeEditor.style.flex = '1';
 
     splitPane.append(fileExplorer, codeEditor);
